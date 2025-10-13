@@ -10,7 +10,8 @@ and this project adheres to
 
 ### Fixed
 
-🐛(service-worker) fix sw registration and page reload logic #1500
+- 🐛(service-worker) fix sw registration and page reload logic #1500
+- 🐛(frontend) show full nested doc names with ajustable bar #1456
 
 ## [3.8.1] - 2025-10-17
 
@@ -25,7 +26,6 @@ and this project adheres to
 ### Removed
 
 - 🔥(backend) remove treebeard form for the document admin #1470
-
 
 ## [3.8.0] - 2025-10-14
 

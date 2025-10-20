@@ -1,27 +1,17 @@
-todo-list/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── TodoList.js
-│   │   │   ├── TodoItem.js
-│   │   │   └── AddTodoForm.js
-│   │   ├── contexts/
-│   │   │   └── TodoContext.js
-│   │   ├── hooks/
-│   │   │   └── useTodos.js
-│   │   ├── utils/
-│   │   │   └── localStorage.js
-│   │   └── App.js
-│   └── package.json
-│
-├── backend/ (optionnel)
-│   ├── controllers/
-│   │   └── todoController.js
-│   ├── models/
-│   │   └── Todo.js
-│   ├── routes/
-│   │   └── todoRoutes.js
-│   └── server.js
-│
+todo-list/\
+├── Les images utilisées sont **'rootless'**/\
+├── Tous les **'SecurityContect'** sont surchargeables/\
+├── Tous les **'PVC'** ont un **'StorageClass'** surchargeable/\
+├── Tous les modes d'accès aux **'PVC'** sont de type **'ReadWriteOnce'**/\
+├── Tous les services sont de type **'ClusterIP'** ou ont un type surchargeable/\
+├── Toutes les **'ressources'** sont surchargeable/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
+├── frontend/\
 └── README.md

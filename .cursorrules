@@ -1,0 +1,430 @@
+# Règles de développement - DINUM Docs
+
+## 🎨 Design System - Cunningham
+
+### Couleurs et Tokens
+
+- **TOUJOURS** utiliser `useCunninghamTheme()` pour accéder aux couleurs et tokens
+- **JAMAIS** hardcoder des couleurs en hexadécimal ou RGB
+- Utiliser `colorsTokens['greyscale-xxx']` pour les nuances de gris (000, 050, 100, 200, etc.)
+- Utiliser `spacingsTokens` pour les espacements
+- Les tokens sont accessibles via CSS variables: `var(--c--theme--colors--xxx)`
+
+```tsx
+// ✅ BON
+const { colorsTokens, spacingsTokens } = useCunninghamTheme();
+background: ${colorsTokens['greyscale-200']};
+
+// ❌ MAUVAIS
+background: #d6dee1;
+```
+
+### Composants Cunningham
+
+- Utiliser les composants de `@openfun/cunningham-react` quand disponibles
+- Importer depuis `@/cunningham` pour les hooks personnalisés
+
+## 🧩 Architecture des Composants
+
+### Structure des Composants
+
+- Utiliser TypeScript strict pour tous les composants
+- Props: préférer les interfaces explicites
+- Exporter les types de props pour la réutilisabilité
+
+```tsx
+// ✅ BON
+interface MyComponentProps {
+  title: string;
+  onClose?: () => void;
+}
+
+export const MyComponent = ({ title, onClose }: MyComponentProps) => {
+  // ...
+};
+```
+
+### Composants de Base
+
+Le projet utilise des composants de base réutilisables:
+
+#### Box
+
+- Composant de mise en page principal (flexbox par défaut)
+- Props préfixées avec `$` pour éviter les conflits DOM
+- Utiliser pour tout conteneur ou layout
+
+```tsx
+<Box
+  $direction="row"
+  $gap="1rem"
+  $padding={{ all: "base" }}
+  $background={colorsTokens["greyscale-000"]}
+>
+  {children}
+</Box>
+```
+
+#### Card
+
+- Utiliser `Card` pour les conteneurs avec bordure
+- Hérite de `BoxType`
+- Déjà configuré avec les styles Cunningham
+
+```tsx
+<Card $padding={{ all: "large" }}>{content}</Card>
+```
+
+#### Text
+
+- Utiliser `Text` pour tout contenu textuel
+- Props: `$size`, `$weight`, `$color`, `$ellipsis`
+
+```tsx
+<Text $size="large" $weight="bold">
+  {text}
+</Text>
+```
+
+## 💅 Styling avec Styled Components
+
+### Conventions
+
+- Utiliser `styled-components` pour les styles personnalisés
+- Props de style préfixées avec `$` pour éviter passage au DOM
+- Import `css` helper pour les blocs CSS complexes
+
+```tsx
+// ✅ BON
+import { css } from 'styled-components';
+
+$css={css`
+  border: 1px solid ${colorsTokens['greyscale-200']};
+  &:hover {
+    background: ${colorsTokens['greyscale-050']};
+  }
+`}
+
+// ❌ MAUVAIS - hardcoded values
+$css={css`
+  border: 1px solid #ccc;
+  padding: 10px;
+`}
+```
+
+### Responsive
+
+- Utiliser `useResponsiveStore()` pour la détection mobile/desktop
+- Adapter les layouts selon `isDesktop`
+
+```tsx
+const { isDesktop } = useResponsiveStore();
+
+$padding={{
+  all: isDesktop ? 'base' : '0',
+}}
+```
+
+## 🎯 Principes Clean Code
+
+### DRY (Don't Repeat Yourself)
+
+- Extraire la logique répétée en hooks personnalisés
+- Créer des composants réutilisables pour les patterns communs
+- Utiliser les composants de base (Box, Card, Text) plutôt que recréer
+
+```tsx
+// ✅ BON - hook réutilisable
+const useToggle = (initial = false) => {
+  const [isOpen, setIsOpen] = useState(initial);
+  const toggle = () => setIsOpen(!isOpen);
+  return { isOpen, toggle, setIsOpen };
+};
+
+// ❌ MAUVAIS - logique dupliquée
+const [isOpen1, setIsOpen1] = useState(false);
+const [isOpen2, setIsOpen2] = useState(false);
+```
+
+### KISS (Keep It Simple, Stupid)
+
+- Fonctions courtes et focalisées (max 20-30 lignes)
+- Un composant = une responsabilité
+- Éviter la sur-ingénierie
+
+```tsx
+// ✅ BON - simple et clair
+const Header = ({ title }: { title: string }) => (
+  <Box $direction="row" $justify="space-between">
+    <Text $size="large">{title}</Text>
+  </Box>
+);
+
+// ❌ MAUVAIS - trop complexe
+const Header = ({ title, subtitle, actions, ... }) => {
+  // 100 lignes de logique
+};
+```
+
+### Code Propre
+
+- Nommage explicite et descriptif
+- Éviter les commentaires inutiles (code auto-documenté)
+- Préférer la composition à l'héritage
+- Gérer les erreurs explicitement
+
+```tsx
+// ✅ BON
+const calculateDefaultSize = useCallback((targetWidth: number) => {
+  const windowWidth = window.innerWidth;
+  return (targetWidth / windowWidth) * 100;
+}, []);
+
+// ❌ MAUVAIS
+const calc = (w: number) => {
+  return (w / window.innerWidth) * 100; // calcule le %
+};
+```
+
+## 🔧 Hooks et State Management
+
+### useState
+
+- Initialiser avec la bonne valeur par défaut
+- Grouper les états liés dans un objet si nécessaire
+
+### useCallback
+
+- Utiliser pour les fonctions passées en props
+- Spécifier correctement les dépendances
+
+### useEffect
+
+- Un effet = une responsabilité
+- Toujours nettoyer (return cleanup function)
+- Dépendances explicites et complètes
+
+```tsx
+// ✅ BON
+useEffect(() => {
+  const handleResize = () => {
+    // logique
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, [dependencies]);
+```
+
+### useRef
+
+- Utiliser pour les références DOM
+- Typer correctement: `useRef<HTMLElement | null>(null)`
+- Utiliser pour les valeurs mutables qui ne déclenchent pas de re-render
+
+## 📁 Structure des Fichiers
+
+### Organisation
+
+```
+src/
+├── components/          # Composants réutilisables
+├── features/           # Fonctionnalités métier
+│   └── [feature]/
+│       ├── components/ # Composants de la feature
+│       ├── hooks/      # Hooks personnalisés
+│       └── api/        # Appels API
+├── layouts/            # Layouts de page
+├── pages/              # Pages Next.js
+├── hooks/              # Hooks globaux
+└── utils/              # Utilitaires
+```
+
+### Imports
+
+- Utiliser les alias `@/` pour les imports absolus
+- Grouper les imports par type:
+  1. React et bibliothèques externes
+  2. Composants internes
+  3. Hooks et utils
+  4. Types
+
+```tsx
+// ✅ BON
+import { useState } from "react";
+import { css } from "styled-components";
+
+import { Box, Text } from "@/components";
+import { useCunninghamTheme } from "@/cunningham";
+
+import { MyType } from "./types";
+```
+
+## 🎭 TypeScript
+
+### Types et Interfaces
+
+- Préférer `interface` pour les objets et props de composants
+- Préférer `type` pour les unions, intersections, tuples
+- Exporter les types des composants
+
+```tsx
+// ✅ BON
+export interface ButtonProps {
+  label: string;
+  onClick: () => void;
+}
+
+export type ButtonSize = "small" | "medium" | "large";
+```
+
+### Typage Strict
+
+- Éviter `any` - utiliser `unknown` si type inconnu
+- Typer explicitement les retours de fonction
+- Utiliser les types helpers: `ComponentPropsWithRef`, `PropsWithChildren`
+
+```tsx
+// ✅ BON
+const MyComponent = ({ children }: PropsWithChildren<MyProps>) => {
+  // ...
+};
+
+// ❌ MAUVAIS
+const MyComponent = ({ children }: any) => {
+  // ...
+};
+```
+
+## ♿ Accessibilité
+
+### ARIA et Sémantique
+
+- Utiliser les balises HTML sémantiques
+- Ajouter les attributs ARIA appropriés
+- Rôles et labels explicites
+
+```tsx
+// ✅ BON
+<Box as="main" role="main" aria-label={t("Main content")}>
+  {children}
+</Box>
+```
+
+### Navigation Clavier
+
+- Support complet du clavier pour les interactions
+- Focus visible et logique
+- Utiliser les hooks de navigation clavier quand nécessaire
+
+## 🌐 Internationalisation
+
+### i18n
+
+- Utiliser `useTranslation()` de `react-i18next`
+- Toujours traduire les textes visibles
+- Clés de traduction descriptives
+
+```tsx
+// ✅ BON
+const { t } = useTranslation();
+<Text>{t('Welcome message')}</Text>
+
+// ❌ MAUVAIS
+<Text>Welcome</Text>
+```
+
+## 🧪 Tests
+
+### Conventions
+
+- Tests e2e (end-to-end) uniquement avec Playwright
+- Localisation des tests: `src/frontend/apps/e2e/`
+- Tester les parcours utilisateurs complets
+- Couvrir les fonctionnalités critiques de bout en bout
+
+## 📝 Nommage
+
+### Conventions
+
+- **Composants**: PascalCase (`MyComponent.tsx`)
+- **Hooks**: camelCase avec préfixe `use` (`useMyHook.ts`)
+- **Utilitaires**: camelCase (`myUtil.ts`)
+- **Constants**: UPPER_SNAKE_CASE (`MAX_WIDTH`)
+- **Types/Interfaces**: PascalCase (`MyType`)
+
+### Props de Style
+
+- Préfixer avec `$` les props styled-components: `$background`, `$padding`
+- Props React normales sans préfixe: `children`, `onClick`
+
+## 🚫 Anti-Patterns à Éviter
+
+### ❌ Ne PAS faire
+
+```tsx
+// Hardcoded colors
+background: '#f0f0f0';
+
+// Inline styles directs
+<div style={{ padding: '10px' }}>
+
+// Any sans raison
+const data: any = fetchData();
+
+// Composants géants (>200 lignes)
+const MegaComponent = () => {
+  // 500 lignes...
+};
+
+// Props drilling excessif
+<A><B><C><D><E prop={value} /></E></D></C></B></A>
+
+// Logique métier dans les composants de présentation
+const Button = () => {
+  const data = await fetchData(); // ❌
+};
+
+// Mutations directes de state
+state.value = newValue; // ❌ utiliser setState
+```
+
+## ✅ Best Practices
+
+### Performance
+
+- Utiliser `memo` pour les composants lourds
+- `useCallback` et `useMemo` judicieusement (pas systématiquement)
+- Lazy loading pour les routes et composants lourds
+
+### Sécurité
+
+- Valider les inputs utilisateur
+- Sanitizer les données avant affichage
+- Pas de secrets dans le code frontend
+
+### Git
+
+- Commits atomiques et descriptifs
+- Messages en anglais, format conventionnel
+- Une feature = une branche
+
+## 🎯 Checklist Avant Commit
+
+- [ ] Code lint-free (`yarn lint`)
+- [ ] Styles valides (`yarn stylelint`)
+- [ ] Tests passent (`yarn test`)
+- [ ] Pas de `console.log` ou code de debug
+- [ ] Types corrects (pas de `any`)
+- [ ] Cunningham utilisé pour les couleurs
+- [ ] Accessibilité respectée
+- [ ] i18n pour tous les textes
+- [ ] Code propre et lisible (DRY, KISS)
+- [ ] Documentation/commentaires si logique complexe
+
+---
+
+**Philosophie**: Code simple, propre, maintenable. Si ça semble compliqué, c'est probablement qu'il y a une meilleure façon de le faire.

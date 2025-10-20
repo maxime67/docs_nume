@@ -5,14 +5,15 @@ import { useTranslation } from 'react-i18next';
 
 import { Icon } from '@/components';
 import { useCreateDoc } from '@/features/docs/doc-management';
+import { useSkeletonStore } from '@/features/skeletons/store/useSkeletonStore';
 
-import { useDocCreationLoadingStore, useLeftPanelStore } from '../stores';
+import { useLeftPanelStore } from '../stores';
 
 export const LeftPanelHeaderButton = () => {
   const router = useRouter();
   const { t } = useTranslation();
   const { togglePanel } = useLeftPanelStore();
-  const { setIsCreatingDoc } = useDocCreationLoadingStore();
+  const { setIsLoading } = useSkeletonStore();
   const [isNavigating, setIsNavigating] = useState(false);
 
   const { mutate: createDoc, isPending: isDocCreating } = useCreateDoc({
@@ -27,13 +28,13 @@ export const LeftPanelHeaderButton = () => {
     },
     onError: () => {
       // If there's an error, disable the skeleton
-      setIsCreatingDoc(false);
+      setIsLoading(false);
       setIsNavigating(false);
     },
   });
 
   const handleClick = () => {
-    setIsCreatingDoc(true);
+    setIsLoading(true);
     createDoc();
   };
 

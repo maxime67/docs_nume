@@ -4,9 +4,10 @@ import { css } from 'styled-components';
 
 import { Box } from '@/components';
 import { useCunninghamTheme } from '@/cunningham';
+import { DocEditorSkeleton } from '@/features/docs/doc-editor';
 import { Header } from '@/features/header';
 import { HEADER_HEIGHT } from '@/features/header/conf';
-import { DocCreationOverlay, LeftPanel } from '@/features/left-panel';
+import { LeftPanel, Skeleton } from '@/features/left-panel';
 import { MAIN_LAYOUT_ID } from '@/layouts/conf';
 import { useResponsiveStore } from '@/stores';
 
@@ -55,7 +56,9 @@ export function MainLayout({
             overflow-x: clip;
           `}
         >
-          <DocCreationOverlay />
+          <Skeleton>
+            <DocEditorSkeleton />
+          </Skeleton>
           {children}
         </Box>
       </Box>

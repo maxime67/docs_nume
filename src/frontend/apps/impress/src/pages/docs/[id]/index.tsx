@@ -21,7 +21,7 @@ import {
 import { KEY_AUTH, setAuthUrl, useAuth } from '@/features/auth';
 import { DocEditorSkeleton } from '@/features/docs/doc-editor/components/DocEditorSkeleton';
 import { getDocChildren, subPageToTree } from '@/features/docs/doc-tree/';
-import { useDocCreationLoadingStore } from '@/features/left-panel/stores';
+import { useSkeletonStore } from '@/features/skeletons/store/useSkeletonStore';
 import { MainLayout } from '@/layouts';
 import { MAIN_LAYOUT_ID } from '@/layouts/conf';
 import { useBroadcastStore } from '@/stores';
@@ -63,7 +63,7 @@ interface DocProps {
 
 const DocPage = ({ id }: DocProps) => {
   const { hasLostConnection, resetLostConnection } = useProviderStore();
-  const { isCreatingDoc, setIsCreatingDoc } = useDocCreationLoadingStore();
+  const { isLoading, setIsLoading } = useSkeletonStore();
   const {
     data: docQuery,
     isError,
@@ -132,10 +132,10 @@ const DocPage = ({ id }: DocProps) => {
     setCurrentDoc(docQuery);
 
     // Disable the creation skeleton once the data is loaded
-    if (isCreatingDoc) {
-      setIsCreatingDoc(false);
+    if (isLoading) {
+      setIsLoading(false);
     }
-  }, [docQuery, setCurrentDoc, isFetching, isCreatingDoc, setIsCreatingDoc]);
+  }, [docQuery, setCurrentDoc, isFetching, isLoading, setIsLoading]);
 
   useEffect(() => {
     return () => {
@@ -199,7 +199,7 @@ const DocPage = ({ id }: DocProps) => {
   // If we're in creation mode, the global skeleton is already displayed
   // Otherwise, display the local skeleton
   if (!doc) {
-    return isCreatingDoc ? null : <DocEditorSkeleton />;
+    return isLoading ? null : <DocEditorSkeleton />;
   }
 
   return (

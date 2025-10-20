@@ -1,6 +1,6 @@
 import { css, keyframes } from 'styled-components';
 
-import { Box } from '@/components';
+import { Box, BoxType } from '@/components';
 import { useCunninghamTheme } from '@/cunningham';
 import { useResponsiveStore } from '@/stores';
 
@@ -13,34 +13,20 @@ const shimmer = keyframes`
   }
 `;
 
-interface SkeletonLineProps {
-  width?: string;
-  maxWidth?: string;
-  height?: string;
-  margin?: string;
-}
+type SkeletonLineProps = Partial<BoxType>;
 
-interface SkeletonCircleProps {
-  size?: string;
-}
+type SkeletonCircleProps = Partial<BoxType>;
 
 export const DocEditorSkeleton = () => {
   const { isDesktop } = useResponsiveStore();
   const { spacingsTokens, colorsTokens } = useCunninghamTheme();
 
-  const SkeletonLine = ({
-    width = '100%',
-    maxWidth = '100%',
-    height = '16px',
-    margin = '0',
-  }: SkeletonLineProps) => {
+  const SkeletonLine = ({ $css, ...props }: SkeletonLineProps) => {
     return (
       <Box
+        $width="100%"
+        $height="16px"
         $css={css`
-          width: ${width};
-          max-width: ${maxWidth};
-          height: ${height};
-          margin: ${margin};
           background: linear-gradient(
             90deg,
             ${colorsTokens['greyscale-100']} 0%,
@@ -50,17 +36,19 @@ export const DocEditorSkeleton = () => {
           background-size: 1000px 100%;
           animation: ${shimmer} 2s infinite linear;
           border-radius: 4px;
+          ${$css}
         `}
+        {...props}
       />
     );
   };
 
-  const SkeletonCircle = ({ size = '32px' }: SkeletonCircleProps) => {
+  const SkeletonCircle = ({ $css, ...props }: SkeletonCircleProps) => {
     return (
       <Box
+        $width="32px"
+        $height="32px"
         $css={css`
-          width: ${size};
-          height: ${size};
           background: linear-gradient(
             90deg,
             ${colorsTokens['greyscale-100']} 0%,
@@ -70,7 +58,9 @@ export const DocEditorSkeleton = () => {
           background-size: 1000px 100%;
           animation: ${shimmer} 2s infinite linear;
           border-radius: 50%;
+          ${$css}
         `}
+        {...props}
       />
     );
   };
@@ -111,28 +101,28 @@ export const DocEditorSkeleton = () => {
                 {/* Title and metadata skeleton */}
                 <Box $gap="0.25rem" $css="flex:1;">
                   {/* Title - "Document sans titre" style */}
-                  <SkeletonLine width="35%" height="40px" />
+                  <SkeletonLine $width="35%" $height="40px" />
 
                   {/* Metadata (role and last update) */}
                   <Box $direction="row" $gap="0.5rem" $align="center">
-                    <SkeletonLine maxWidth="260px" height="12px" />
+                    <SkeletonLine $maxWidth="260px" $height="12px" />
                   </Box>
                 </Box>
 
                 {/* Toolbox skeleton (buttons) */}
                 <Box $direction="row" $gap="0.75rem" $align="center">
                   {/* Partager button */}
-                  <SkeletonLine width="90px" height="40px" />
+                  <SkeletonLine $width="90px" $height="40px" />
                   {/* Download icon */}
-                  <SkeletonCircle size="40px" />
+                  <SkeletonCircle $width="40px" $height="40px" />
                   {/* Menu icon */}
-                  <SkeletonCircle size="40px" />
+                  <SkeletonCircle $width="40px" $height="40px" />
                 </Box>
               </Box>
             </Box>
 
             {/* Separator */}
-            <SkeletonLine width="100%" height="1px" />
+            <SkeletonLine $height="1px" />
           </Box>
         </Box>
 
@@ -153,7 +143,7 @@ export const DocEditorSkeleton = () => {
             {/* Placeholder text similar to screenshot */}
             <Box $gap="0rem">
               {/* Single placeholder line like in the screenshot */}
-              <SkeletonLine width="85%" height="20px" />
+              <SkeletonLine $width="85%" $height="20px" />
             </Box>
           </Box>
         </Box>

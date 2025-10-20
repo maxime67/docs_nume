@@ -14,7 +14,7 @@
 image:
   repository: lasuite/impress-backend
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "3.4.1"
 
 ## @param nameOverride Override the chart name
 ## @param fullnameOverride Override the full application name

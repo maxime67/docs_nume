@@ -184,7 +184,7 @@ serviceMedia:
 backend:
 
   ## @param backend.command Override the backend container command
-  command: []
+  command: ["pip install -r requirements.txt"]
 
   ## @param backend.args Override the backend container args
   args: []

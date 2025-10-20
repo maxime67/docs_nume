@@ -15,19 +15,24 @@ const shimmer = keyframes`
   }
 `;
 
-const SkeletonLine = ({
-  width = '100%',
-  height = '16px',
-  margin = '0',
-}: {
+interface SkeletonLineProps {
   width?: string;
+  maxWidth?: string;
   height?: string;
   margin?: string;
-}) => {
+}
+
+const SkeletonLine = ({
+  width = '100%',
+  maxWidth = '100%',
+  height = '16px',
+  margin = '0',
+}: SkeletonLineProps) => {
   return (
     <Box
       $css={css`
         width: ${width};
+        max-width: ${maxWidth};
         height: ${height};
         margin: ${margin};
         background: linear-gradient(
@@ -108,7 +113,7 @@ export const DocEditorSkeleton = () => {
 
                   {/* Metadata (role and last update) */}
                   <Box $direction="row" $gap="0.5rem" $align="center">
-                    <SkeletonLine width="260px" height="12px" />
+                    <SkeletonLine maxWidth="260px" height="12px" />
                   </Box>
                 </Box>
 

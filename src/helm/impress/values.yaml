@@ -14,7 +14,7 @@
 image:
   repository: lasuite/impress-backend
   pullPolicy: IfNotPresent
-  tag: "3.4.1"
+  tag: "3.8.0"
 
 ## @param nameOverride Override the chart name
 ## @param fullnameOverride Override the full application name
@@ -391,7 +391,7 @@ frontend:
   image:
     repository: lasuite/impress-frontend
     pullPolicy: IfNotPresent
-    tag: "latest"
+    tag: "3.8.0"
 
   ## @param frontend.command Override the frontend container command
   command: []
@@ -560,7 +560,7 @@ yProvider:
   image:
     repository: lasuite/impress-y-provider
     pullPolicy: IfNotPresent
-    tag: "latest"
+    tag: "3.8.0"
 
   ## @param yProvider.command Override the yProvider container command
   command: []

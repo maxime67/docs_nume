@@ -1,10 +1,8 @@
 import { css, keyframes } from 'styled-components';
 
 import { Box } from '@/components';
-import { tokens, useCunninghamTheme } from '@/cunningham';
+import { useCunninghamTheme } from '@/cunningham';
 import { useResponsiveStore } from '@/stores';
-
-const colors = tokens.themes.default.theme.colors;
 
 const shimmer = keyframes`
   0% {
@@ -22,56 +20,60 @@ interface SkeletonLineProps {
   margin?: string;
 }
 
-const SkeletonLine = ({
-  width = '100%',
-  maxWidth = '100%',
-  height = '16px',
-  margin = '0',
-}: SkeletonLineProps) => {
-  return (
-    <Box
-      $css={css`
-        width: ${width};
-        max-width: ${maxWidth};
-        height: ${height};
-        margin: ${margin};
-        background: linear-gradient(
-          90deg,
-          ${colors['greyscale-100']} 0%,
-          ${colors['greyscale-200']} 50%,
-          ${colors['greyscale-100']} 100%
-        );
-        background-size: 1000px 100%;
-        animation: ${shimmer} 2s infinite linear;
-        border-radius: 4px;
-      `}
-    />
-  );
-};
-
-const SkeletonCircle = ({ size = '32px' }: { size?: string }) => {
-  return (
-    <Box
-      $css={css`
-        width: ${size};
-        height: ${size};
-        background: linear-gradient(
-          90deg,
-          ${colors['greyscale-100']} 0%,
-          ${colors['greyscale-200']} 50%,
-          ${colors['greyscale-100']} 100%
-        );
-        background-size: 1000px 100%;
-        animation: ${shimmer} 2s infinite linear;
-        border-radius: 50%;
-      `}
-    />
-  );
-};
+interface SkeletonCircleProps {
+  size?: string;
+}
 
 export const DocEditorSkeleton = () => {
   const { isDesktop } = useResponsiveStore();
-  const { spacingsTokens } = useCunninghamTheme();
+  const { spacingsTokens, colorsTokens } = useCunninghamTheme();
+
+  const SkeletonLine = ({
+    width = '100%',
+    maxWidth = '100%',
+    height = '16px',
+    margin = '0',
+  }: SkeletonLineProps) => {
+    return (
+      <Box
+        $css={css`
+          width: ${width};
+          max-width: ${maxWidth};
+          height: ${height};
+          margin: ${margin};
+          background: linear-gradient(
+            90deg,
+            ${colorsTokens['greyscale-100']} 0%,
+            ${colorsTokens['greyscale-200']} 50%,
+            ${colorsTokens['greyscale-100']} 100%
+          );
+          background-size: 1000px 100%;
+          animation: ${shimmer} 2s infinite linear;
+          border-radius: 4px;
+        `}
+      />
+    );
+  };
+
+  const SkeletonCircle = ({ size = '32px' }: SkeletonCircleProps) => {
+    return (
+      <Box
+        $css={css`
+          width: ${size};
+          height: ${size};
+          background: linear-gradient(
+            90deg,
+            ${colorsTokens['greyscale-100']} 0%,
+            ${colorsTokens['greyscale-200']} 50%,
+            ${colorsTokens['greyscale-100']} 100%
+          );
+          background-size: 1000px 100%;
+          animation: ${shimmer} 2s infinite linear;
+          border-radius: 50%;
+        `}
+      />
+    );
+  };
 
   return (
     <>

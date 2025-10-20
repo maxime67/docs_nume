@@ -13,6 +13,7 @@ export interface UseCollaborationStore {
   destroyProvider: () => void;
   provider: HocuspocusProvider | undefined;
   isConnected: boolean;
+  isSynced: boolean;
   hasLostConnection: boolean;
   resetLostConnection: () => void;
 }
@@ -20,6 +21,7 @@ export interface UseCollaborationStore {
 const defaultValues = {
   provider: undefined,
   isConnected: false,
+  isSynced: false,
   hasLostConnection: false,
 };
 
@@ -49,6 +51,9 @@ export const useProviderStore = create<UseCollaborationStore>((set, get) => ({
                 : state.hasLostConnection,
           };
         });
+      },
+      onSynced: ({ state }) => {
+        set({ isSynced: state });
       },
     });
 

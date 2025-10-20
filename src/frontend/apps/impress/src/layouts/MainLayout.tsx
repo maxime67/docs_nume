@@ -10,7 +10,7 @@ import { LeftPanel } from '@/features/left-panel';
 import { MAIN_LAYOUT_ID } from '@/layouts/conf';
 import { useResponsiveStore } from '@/stores';
 
-import { ResizableLeftPanel } from './components/ResizableLeftPanel';
+import { ResizableLeftPanel } from '../features/left-panel/components/ResizableLeftPanel';
 
 type MainLayoutProps = {
   backgroundColor?: 'white' | 'grey';
@@ -72,7 +72,10 @@ export function MainLayout({
     // Desktop with resizable panel
     if (enableResizablePanel) {
       return (
-        <ResizableLeftPanel onResizingChange={setIsResizing}>
+        <ResizableLeftPanel
+          leftPanel={<LeftPanel />}
+          onResizingChange={setIsResizing}
+        >
           {mainContent}
         </ResizableLeftPanel>
       );

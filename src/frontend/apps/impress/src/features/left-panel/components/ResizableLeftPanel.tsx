@@ -7,18 +7,20 @@ import {
 } from 'react-resizable-panels';
 
 import { useCunninghamTheme } from '@/cunningham';
-import { LeftPanel } from '@/features/left-panel';
-
-const MIN_PANEL_SIZE_PX = 300;
-const MAX_PANEL_SIZE_PX = 450;
 
 type ResizableLeftPanelProps = {
+  leftPanel: React.ReactNode;
   children: React.ReactNode;
+  minPanelSizePx?: number;
+  maxPanelSizePx?: number;
   onResizingChange?: (isResizing: boolean) => void;
 };
 
 export const ResizableLeftPanel = ({
+  leftPanel,
   children,
+  minPanelSizePx = 300,
+  maxPanelSizePx = 450,
   onResizingChange,
 }: ResizableLeftPanelProps) => {
   const { colorsTokens } = useCunninghamTheme();
@@ -39,9 +41,9 @@ export const ResizableLeftPanel = ({
   useEffect(() => {
     const handleResize = () => {
       // Update panel sizes (px -> %)
-      const min = Math.round(calculateDefaultSize(MIN_PANEL_SIZE_PX));
+      const min = Math.round(calculateDefaultSize(minPanelSizePx));
       const max = Math.round(
-        Math.min(calculateDefaultSize(MAX_PANEL_SIZE_PX), 40),
+        Math.min(calculateDefaultSize(maxPanelSizePx), 40),
       );
       setMinPanelSize(min);
       setMaxPanelSize(max);
@@ -66,7 +68,7 @@ export const ResizableLeftPanel = ({
         clearTimeout(resizeTimeoutRef.current);
       }
     };
-  }, [calculateDefaultSize, onResizingChange]);
+  }, [calculateDefaultSize, onResizingChange, minPanelSizePx, maxPanelSizePx]);
 
   return (
     <PanelGroup autoSaveId="docs-left-panel-persistence" direction="horizontal">
@@ -77,7 +79,7 @@ export const ResizableLeftPanel = ({
         minSize={minPanelSize}
         maxSize={maxPanelSize}
       >
-        <LeftPanel />
+        {leftPanel}
       </Panel>
       <PanelResizeHandle
         style={{

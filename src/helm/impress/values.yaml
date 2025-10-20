@@ -137,7 +137,15 @@ yProvider:
         items:
         - key: cacert.pem
           path: cacert.pem
-
+  ## @param yProvider.service.type yProvider Service type
+  ## @param yProvider.service.port yProvider Service listening port
+  ## @param yProvider.service.targetPort yProvider container listening port
+  ## @param yProvider.service.annotations Annotations to add to the yProvider Service
+  service:
+    type: ClusterIP
+    port: 443
+    targetPort: 4444
+    annotations: { }
 posthog:
   ingress:
     enabled: false

@@ -34,6 +34,10 @@ and this project adheres to
 - ✨(frontend) add pdf block to the editor #1293
 - ✨List and restore deleted docs #1450
 
+### Fixed
+
+- 🐛(frontend) show full nested doc names with ajustable bar #1456
+
 ### Changed
 
 - ♻️(frontend) Refactor Auth component for improved redirection logic #1461
